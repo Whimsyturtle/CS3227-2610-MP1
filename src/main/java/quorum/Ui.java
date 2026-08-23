@@ -28,8 +28,12 @@ public class Ui {
         show("Bye. Hope to see you again soon!");
     }
 
-    public void showEcho(String input) {
-        show(input);
+    public void showAdded(Participant participant, int total) {
+        show("Added: " + participant, "Now tracking " + total + ".");
+    }
+
+    public void showError(String message) {
+        show(message);
     }
 
     private void show(String... lines) {
