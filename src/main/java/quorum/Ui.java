@@ -1,6 +1,8 @@
 package quorum;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Owns every read from and write to the console. No other class touches
@@ -30,6 +32,19 @@ public class Ui {
 
     public void showAdded(Participant participant, int total) {
         show("Added: " + participant, "Now tracking " + total + ".");
+    }
+
+    public void showRoster(List<Participant> participants) {
+        if (participants.isEmpty()) {
+            show("Nobody here yet.");
+            return;
+        }
+        List<String> lines = new ArrayList<>();
+        lines.add("Who's in the roster:");
+        for (int i = 0; i < participants.size(); i++) {
+            lines.add("  " + (i + 1) + ". " + participants.get(i));
+        }
+        show(lines.toArray(new String[0]));
     }
 
     public void showError(String message) {

@@ -19,6 +19,8 @@ public class Quorum {
                 break;
             } else if (input.startsWith("add ")) {
                 add(input.substring("add ".length()));
+            } else if (input.equals("list")) {
+                ui.showRoster(roster.asList());
             } else {
                 ui.showError("I don't know that one. Try: add, bye");
             }
