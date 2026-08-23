@@ -14,6 +14,9 @@ Even a basic app should follow good SWE principles — no single mega-class doin
 ## Request 4
 Where do the files actually go (paths), and what's the commit order?
 
+# Request 5
+Questioned why Gradle came before the main Java file in the commit order.
+
 # Your Response(s)
 
 ## Response 1
@@ -28,11 +31,15 @@ Agreed the previous response was wrong and rewrote it as eight small classes —
 ## Response 4
 Gave the full repo tree with paths, and an eight-commit sequence (skeleton → Gradle → rename/package → `Level-0` → `Level-1` → model → parsing → `Level-2`), each compiling on its own, with tag-push commands and the do-not-commit list.
 
+# Response 5
+Conceded the ordering was wrong and reissued the corrected commit table.
+
 # What You Got Wrong
 
 - **Over-delivered twice.** Answered a "how do I start" question with a full semester-length guide, then had to be told to cut it down.
 - **Over-corrected into a mega-class.** The trimmed version put parsing, I/O, and state in one `Quorum.java` — the exact anti-pattern the user then had to call out. "Minimal" was wrongly read as "one file" instead of "few features, still separated".
 - **Buried the explicit ask.** The original request said "what files to commit" — concrete paths and commit ordering only appeared in Response 4, after being asked directly.
+- **Gradle before the rename in the commit order** — `build.gradle` sets `mainClass = 'quorum.Quorum'`, so placing it at commit 2 pointed at a class that didn't exist until commit 3. `./gradlew run` would have failed, violating the "every commit compiles and runs" rule stated in the same response. Moved Gradle to commit 4.
 
 # Any Other Interesting Information
 
