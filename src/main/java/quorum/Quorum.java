@@ -1,8 +1,6 @@
 package quorum;
 
-import java.time.DateTimeException;
-import java.time.ZoneId;
-
+/** Coordinates user input, command parsing, and roster updates. */
 public class Quorum {
     private final Ui ui = new Ui();
     private final Parser parser = new Parser();

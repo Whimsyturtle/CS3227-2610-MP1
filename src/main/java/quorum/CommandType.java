@@ -1,5 +1,6 @@
 package quorum;
 
+/** Commands supported by the application. */
 public enum CommandType {
     ADD, LIST, BYE, UNKNOWN;
 

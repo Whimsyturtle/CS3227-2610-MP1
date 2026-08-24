@@ -19,7 +19,7 @@ public class Parser {
     }
 
     /**
-     * Builds a Participant from the argument string of an add command.
+     * Builds a `Participant` from the argument string of an add command.
      *
      * @throws QuorumException if the name or zone is missing or unrecognised.
      */

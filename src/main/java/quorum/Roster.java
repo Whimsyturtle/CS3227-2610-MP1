@@ -1,9 +1,10 @@
 package quorum;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
+/** Stores the participants currently tracked by the application. */
 public class Roster {
     private final List<Participant> participants = new ArrayList<>();
 

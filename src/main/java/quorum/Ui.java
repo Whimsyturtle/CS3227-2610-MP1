@@ -1,8 +1,8 @@
 package quorum;
 
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Owns every read from and write to the console. No other class touches
