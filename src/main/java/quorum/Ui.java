@@ -44,6 +44,11 @@ public class Ui {
         show("Deleted: " + participant, "Now tracking " + total + ".");
     }
 
+    /** Displays the participant after an edit. */
+    public void showEdited(Participant participant) {
+        show("Edited: " + participant);
+    }
+
     /** Displays the participants currently in the roster. */
     public void showRoster(List<Participant> participants) {
         if (participants.isEmpty()) {

@@ -21,6 +21,11 @@ public class Participant {
         return zone;
     }
 
+    /** Returns a copy of this participant with the given time zone. */
+    public Participant withZone(ZoneId newZone) {
+        return new Participant(name, newZone);
+    }
+
     @Override
     public String toString() {
         return name + " (" + zone.getId() + ")";

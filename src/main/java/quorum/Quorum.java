@@ -27,8 +27,9 @@ public class Quorum {
             switch (command.type()) {
             case ADD -> executeAdd(command.arguments());
             case DELETE -> executeDelete(command.arguments());
+            case EDIT -> executeEdit(command.arguments());
             case LIST -> ui.showRoster(roster.asList());
-            default -> ui.showError("I don't know that one. Try: add, delete, list, bye");
+            default -> ui.showError("I don't know that one. Try: add, delete, edit, list, bye");
             }
         } catch (QuorumException e) {
             ui.showError(e.getMessage());
@@ -45,5 +46,11 @@ public class Quorum {
         int index = parser.parseIndex(arguments);
         Participant participant = roster.remove(index);
         ui.showDeleted(participant, roster.size());
+    }
+
+    private void executeEdit(String arguments) throws QuorumException {
+        EditRequest edit = parser.parseEdit(arguments);
+        Participant participant = roster.editZone(edit.index(), edit.zone());
+        ui.showEdited(participant);
     }
 }

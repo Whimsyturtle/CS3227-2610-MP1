@@ -1,4 +1,4 @@
-# Adding Delete Command
+# Implementing Delete Command
 
 # My Request(s)
 

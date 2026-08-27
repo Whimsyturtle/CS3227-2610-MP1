@@ -34,12 +34,21 @@ public class Parser {
             throw new QuorumException("Missing name.");
         }
 
-        String zoneText = parts[1].trim();
-        if (zoneText.isEmpty()) {
-            throw new QuorumException("Missing timezone after /tz.");
+        return new Participant(name, parseZone(parts[1]));
+    }
+
+    /**
+     * Parses the index and new time zone from the arguments of an edit command.
+     *
+     * @throws QuorumException if the index or time zone is missing or invalid
+     */
+    public EditRequest parseEdit(String arguments) throws QuorumException {
+        String[] parts = arguments.split(ZONE_DELIMITER, 2);
+        if (parts.length < 2) {
+            throw new QuorumException("I need a timezone. Try: edit 1 /tz Europe/London");
         }
 
-        return new Participant(name, toZone(zoneText));
+        return new EditRequest(parseIndex(parts[0]), parseZone(parts[1]));
     }
 
     /**
@@ -64,7 +73,17 @@ public class Parser {
         }
     }
 
-    private ZoneId toZone(String zoneText) throws QuorumException {
+    /**
+     * Parses a time zone from the given arguments.
+     *
+     * @throws QuorumException if the time zone is missing or invalid
+     */
+    public ZoneId parseZone(String arguments) throws QuorumException {
+        String zoneText = arguments.trim();
+        if (zoneText.isEmpty()) {
+            throw new QuorumException("Missing timezone after /tz.");
+        }
+
         try {
             return ZoneId.of(zoneText);
         } catch (DateTimeException e) {
