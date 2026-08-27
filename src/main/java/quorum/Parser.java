@@ -2,6 +2,15 @@ package quorum;
 
 import java.time.DateTimeException;
 import java.time.ZoneId;
+import java.util.Locale;
+
+import quorum.command.AddCommand;
+import quorum.command.ByeCommand;
+import quorum.command.Command;
+import quorum.command.DeleteCommand;
+import quorum.command.EditCommand;
+import quorum.command.ListCommand;
+import quorum.command.UnknownCommand;
 
 /**
  * Turns raw user input into structured objects. Knows the command syntax and
@@ -10,12 +19,20 @@ import java.time.ZoneId;
 public class Parser {
     private static final String ZONE_DELIMITER = "/tz";
 
-    /** Splits the given input into a command type and its raw arguments. */
-    public Command parse(String input) {
+    /** Parses the given input into a command with structured arguments. */
+    public Command parse(String input) throws QuorumException {
         String[] parts = input.trim().split("\\s+", 2);
-        CommandType type = CommandType.from(parts[0]);
+        String keyword = parts[0].toLowerCase(Locale.ROOT);
         String arguments = parts.length > 1 ? parts[1] : "";
-        return new Command(type, arguments);
+
+        return switch (keyword) {
+        case "add" -> new AddCommand(parseParticipant(arguments));
+        case "delete" -> new DeleteCommand(parseIndex(arguments));
+        case "edit" -> new EditCommand(parseEdit(arguments));
+        case "list" -> new ListCommand();
+        case "bye" -> new ByeCommand();
+        default -> new UnknownCommand();
+        };
     }
 
     /**
