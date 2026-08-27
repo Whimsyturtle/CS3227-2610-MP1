@@ -39,6 +39,11 @@ public class Ui {
         show("Added: " + participant, "Now tracking " + total + ".");
     }
 
+    /** Displays the deleted participant and resulting roster size. */
+    public void showDeleted(Participant participant, int total) {
+        show("Deleted: " + participant, "Now tracking " + total + ".");
+    }
+
     /** Displays the participants currently in the roster. */
     public void showRoster(List<Participant> participants) {
         if (participants.isEmpty()) {

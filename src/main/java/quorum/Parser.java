@@ -42,6 +42,28 @@ public class Parser {
         return new Participant(name, toZone(zoneText));
     }
 
+    /**
+     * Parses a one-based index from the given arguments.
+     *
+     * @throws QuorumException if the index is missing or is not a positive integer
+     */
+    public int parseIndex(String arguments) throws QuorumException {
+        String indexText = arguments.trim();
+        if (indexText.isEmpty()) {
+            throw new QuorumException("Missing index.");
+        }
+
+        try {
+            int index = Integer.parseInt(indexText);
+            if (index < 1) {
+                throw new QuorumException("Index must be at least 1.");
+            }
+            return index;
+        } catch (NumberFormatException e) {
+            throw new QuorumException("Index must be a whole number.");
+        }
+    }
+
     private ZoneId toZone(String zoneText) throws QuorumException {
         try {
             return ZoneId.of(zoneText);
