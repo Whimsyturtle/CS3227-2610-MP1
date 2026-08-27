@@ -13,27 +13,33 @@ public class Ui {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    /** Returns whether another command is available to read. */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
+    /** Reads the next command from the console. */
     public String readCommand() {
         return scanner.nextLine();
     }
 
+    /** Displays the application welcome message. */
     public void showWelcome() {
         show("QUORUM",
                 "Finding the hours when everyone's awake.");
     }
 
+    /** Displays the application goodbye message. */
     public void showGoodbye() {
         show("Bye. Hope to see you again soon!");
     }
 
+    /** Displays the added participant and resulting roster size. */
     public void showAdded(Participant participant, int total) {
         show("Added: " + participant, "Now tracking " + total + ".");
     }
 
+    /** Displays the participants currently in the roster. */
     public void showRoster(List<Participant> participants) {
         if (participants.isEmpty()) {
             show("Nobody here yet.");
@@ -47,6 +53,7 @@ public class Ui {
         show(lines.toArray(new String[0]));
     }
 
+    /** Displays the given error message. */
     public void showError(String message) {
         show(message);
     }

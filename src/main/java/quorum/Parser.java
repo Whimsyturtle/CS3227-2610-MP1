@@ -10,7 +10,7 @@ import java.time.ZoneId;
 public class Parser {
     private static final String ZONE_DELIMITER = "/tz";
 
-    /** Splits input into a command type and its raw argument string. */
+    /** Splits the given input into a command type and its raw arguments. */
     public Command parse(String input) {
         String[] parts = input.trim().split("\\s+", 2);
         CommandType type = CommandType.from(parts[0]);
@@ -19,9 +19,9 @@ public class Parser {
     }
 
     /**
-     * Builds a `Participant` from the argument string of an add command.
+     * Builds a participant from the arguments of an add command.
      *
-     * @throws QuorumException if the name or zone is missing or unrecognised.
+     * @throws QuorumException if the name or time zone is missing or invalid
      */
     public Participant parseParticipant(String arguments) throws QuorumException {
         String[] parts = arguments.split(ZONE_DELIMITER, 2);

@@ -2,11 +2,12 @@ package quorum;
 
 import java.time.ZoneId;
 
-/** A named participant and their time zone. */
+/** Represents a named participant and their time zone. */
 public class Participant {
     private final String name;
     private final ZoneId zone;
 
+    /** Creates a participant with the given name and time zone. */
     public Participant(String name, ZoneId zone) {
         this.name = name;
         this.zone = zone;
