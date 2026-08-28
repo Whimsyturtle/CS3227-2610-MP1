@@ -12,6 +12,7 @@ import quorum.command.EditCommand;
 import quorum.command.EditRequest;
 import quorum.command.ListCommand;
 import quorum.command.UnknownCommand;
+import quorum.command.ZonesCommand;
 import quorum.model.Participant;
 
 /**
@@ -32,6 +33,7 @@ public class Parser {
         case "delete" -> new DeleteCommand(parseIndex(arguments));
         case "edit" -> new EditCommand(parseEdit(arguments));
         case "list" -> new ListCommand();
+        case "zones" -> new ZonesCommand(parseZoneSearch(arguments));
         case "bye" -> new ByeCommand();
         default -> new UnknownCommand();
         };
@@ -87,6 +89,19 @@ public class Parser {
     }
 
     /**
+     * Parses the search term from the arguments of a zones command.
+     *
+     * @throws QuorumException if the search term is missing
+     */
+    public String parseZoneSearch(String arguments) throws QuorumException {
+        String searchTerm = arguments.trim();
+        if (searchTerm.isEmpty()) {
+            throw new QuorumException("Missing timezone search term. Try: zones Singapore");
+        }
+        return searchTerm;
+    }
+
+    /**
      * Parses a time zone from the given arguments.
      *
      * @throws QuorumException if the time zone is missing or invalid
@@ -101,7 +116,8 @@ public class Parser {
             return ZoneId.of(zoneText);
         } catch (DateTimeException e) {
             throw new QuorumException(
-                    "I don't recognise the zone \"" + zoneText + "\". Try one like Asia/Singapore.");
+                    "I don't recognise the zone \"" + zoneText
+                            + "\". Try \"zones Singapore\" to find a valid timezone.");
         }
     }
 }

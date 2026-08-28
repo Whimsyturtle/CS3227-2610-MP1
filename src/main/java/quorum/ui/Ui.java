@@ -79,6 +79,22 @@ public class Ui {
         show(lines.toArray(new String[0]));
     }
 
+    /** Displays the time zones matching the given search term. */
+    public void showZones(String searchTerm, List<String> zones) {
+        if (zones.isEmpty()) {
+            show("No timezones found for \"" + searchTerm + "\".",
+                    "Try searching for a city or region, such as: zones Asia");
+            return;
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("Timezones matching \"" + searchTerm + "\":");
+        for (String zone : zones) {
+            lines.add("  " + zone);
+        }
+        show(lines.toArray(new String[0]));
+    }
+
     /** Displays the given error message. */
     public void showError(String message) {
         show(message);
