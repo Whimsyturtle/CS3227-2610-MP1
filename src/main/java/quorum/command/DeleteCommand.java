@@ -1,9 +1,9 @@
 package quorum.command;
 
 import quorum.QuorumException;
-import quorum.Ui;
 import quorum.model.Participant;
 import quorum.model.Roster;
+import quorum.ui.Ui;
 
 /** Deletes a participant from the roster by index. */
 public class DeleteCommand implements Command {

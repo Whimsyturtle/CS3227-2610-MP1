@@ -8,6 +8,7 @@ import quorum.model.Roster;
 import quorum.storage.FileRosterStorage;
 import quorum.storage.RosterStorage;
 import quorum.storage.TsvRosterCodec;
+import quorum.ui.Ui;
 
 /** Coordinates user input, command parsing, and roster updates. */
 public class Quorum {

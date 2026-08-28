@@ -1,7 +1,7 @@
 package quorum.command;
 
-import quorum.Ui;
 import quorum.model.Roster;
+import quorum.ui.Ui;
 
 /** Stops Quorum from accepting further commands. */
 public class ByeCommand implements Command {

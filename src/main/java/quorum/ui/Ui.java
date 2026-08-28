@@ -1,4 +1,4 @@
-package quorum;
+package quorum.ui;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -24,7 +24,7 @@ public class Ui {
     }
 
     /** Allows application tests to supply isolated input and output streams. */
-    Ui(InputStream input, PrintStream output) {
+    public Ui(InputStream input, PrintStream output) {
         scanner = new Scanner(input);
         this.output = output;
     }
