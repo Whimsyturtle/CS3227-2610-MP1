@@ -39,6 +39,27 @@ public class Roster {
         return edited;
     }
 
+    /** Adds a tag to the participant at the given one-based index. */
+    public Participant tag(int index, Tag tag) throws QuorumException {
+        int listIndex = toListIndex(index);
+        Participant tagged = participants.get(listIndex).withTag(tag);
+        participants.set(listIndex, tagged);
+        return tagged;
+    }
+
+    /** Removes a tag from the participant at the given one-based index. */
+    public Participant untag(int index, Tag tag) throws QuorumException {
+        int listIndex = toListIndex(index);
+        Participant untagged = participants.get(listIndex).withoutTag(tag);
+        participants.set(listIndex, untagged);
+        return untagged;
+    }
+
+    /** Returns whether at least one participant currently has the given tag. */
+    public boolean hasTag(Tag tag) {
+        return participants.stream().anyMatch(participant -> participant.hasTag(tag));
+    }
+
     /** Returns the number of participants in the roster. */
     public int size() {
         return participants.size();

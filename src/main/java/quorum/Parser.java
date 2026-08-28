@@ -11,9 +11,13 @@ import quorum.command.DeleteCommand;
 import quorum.command.EditCommand;
 import quorum.command.EditRequest;
 import quorum.command.ListCommand;
+import quorum.command.TagCommand;
+import quorum.command.TagRequest;
 import quorum.command.UnknownCommand;
+import quorum.command.UntagCommand;
 import quorum.command.ZonesCommand;
 import quorum.model.Participant;
+import quorum.model.Tag;
 
 /**
  * Turns raw user input into structured objects. Knows the command syntax and
@@ -32,6 +36,8 @@ public class Parser {
         case "add" -> new AddCommand(parseParticipant(arguments));
         case "delete" -> new DeleteCommand(parseIndex(arguments));
         case "edit" -> new EditCommand(parseEdit(arguments));
+        case "tag" -> new TagCommand(parseTagRequest(arguments));
+        case "untag" -> new UntagCommand(parseTagRequest(arguments));
         case "list" -> new ListCommand();
         case "zones" -> new ZonesCommand(parseZoneSearch(arguments));
         case "bye" -> new ByeCommand();
@@ -86,6 +92,26 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new QuorumException("Index must be a whole number.");
         }
+    }
+
+    /**
+     * Parses a participant index and tag from tag or untag arguments.
+     *
+     * @throws QuorumException if the index or tag is missing or invalid
+     */
+    public TagRequest parseTagRequest(String arguments) throws QuorumException {
+        String[] parts = arguments.trim().split("\\s+", 2);
+        if (parts.length < 2) {
+            if (parts[0].isEmpty()) {
+                throw new QuorumException("Missing index.");
+            }
+            parseIndex(parts[0]);
+            throw new QuorumException("Missing tag.");
+        }
+
+        int index = parseIndex(parts[0]);
+        Tag tag = new Tag(parts[1]);
+        return new TagRequest(index, tag);
     }
 
     /**

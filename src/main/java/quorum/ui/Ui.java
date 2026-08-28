@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import quorum.model.Participant;
+import quorum.model.Tag;
 
 /**
  * Owns every read from and write to the console. No other class touches
@@ -63,6 +64,21 @@ public class Ui {
     /** Displays the participant after an edit. */
     public void showEdited(Participant participant) {
         show("Edited: " + participant);
+    }
+
+    /** Displays a tag added to a participant and whether the tag is new. */
+    public void showTagged(Participant participant, Tag tag, boolean isNewTag) {
+        List<String> lines = new ArrayList<>();
+        lines.add("Tagged " + participant.getName() + " with " + tag + ".");
+        if (isNewTag) {
+            lines.add("Created new tag: " + tag + ".");
+        }
+        show(lines.toArray(new String[0]));
+    }
+
+    /** Displays a tag removed from a participant. */
+    public void showUntagged(Participant participant, Tag tag) {
+        show("Removed tag " + tag + " from " + participant.getName() + ".");
     }
 
     /** Displays the participants currently in the roster. */

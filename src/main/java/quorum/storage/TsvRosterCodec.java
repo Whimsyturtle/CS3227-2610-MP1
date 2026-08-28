@@ -2,15 +2,20 @@ package quorum.storage;
 
 import java.time.DateTimeException;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import quorum.QuorumException;
 import quorum.model.Participant;
 import quorum.model.Roster;
+import quorum.model.Tag;
 
 /** Encodes and decodes rosters as tab-separated values. */
 public class TsvRosterCodec implements RosterCodec {
     private static final char BYTE_ORDER_MARK = '\uFEFF';
-    private static final String HEADER = "name\tzoneId";
+    private static final String HEADER = "name\tzoneId\ttags";
 
     @Override
     public String encode(Roster roster) {
@@ -20,6 +25,10 @@ public class TsvRosterCodec implements RosterCodec {
             content.append(participant.getName())
                     .append('\t')
                     .append(participant.getZone().getId())
+                    .append('\t')
+                    .append(participant.getTags().stream()
+                            .map(Tag::value)
+                            .collect(Collectors.joining(",")))
                     .append('\n');
         }
         return content.toString();
@@ -31,7 +40,7 @@ public class TsvRosterCodec implements RosterCodec {
         String[] lines = contentWithoutMark.split("\\R", -1);
         if (lines.length == 0 || !HEADER.equals(lines[0])) {
             throw new QuorumException(
-                    "Expected header \"name<TAB>zoneId\" on line 1.");
+                    "Expected header \"name<TAB>zoneId<TAB>tags\" on line 1.");
         }
 
         Roster roster = new Roster();
@@ -48,9 +57,9 @@ public class TsvRosterCodec implements RosterCodec {
     private Participant decodeParticipant(String line, int lineNumber)
             throws QuorumException {
         String[] fields = line.split("\t", -1);
-        if (fields.length != 2) {
+        if (fields.length != 3) {
             throw new QuorumException(
-                    "Expected exactly two tab-separated fields on line " + lineNumber + ".");
+                    "Expected exactly three tab-separated fields on line " + lineNumber + ".");
         }
 
         String name = fields[0];
@@ -60,7 +69,8 @@ public class TsvRosterCodec implements RosterCodec {
         }
 
         try {
-            return new Participant(name, ZoneId.of(zoneText));
+            Collection<Tag> tags = decodeTags(fields[2]);
+            return new Participant(name, ZoneId.of(zoneText), tags);
         } catch (DateTimeException e) {
             throw new QuorumException(
                     "Invalid timezone \"" + zoneText + "\" on line " + lineNumber + ".", e);
@@ -68,6 +78,17 @@ public class TsvRosterCodec implements RosterCodec {
             throw new QuorumException(
                     "Invalid participant on line " + lineNumber + ": " + e.getMessage(), e);
         }
+    }
+
+    private Collection<Tag> decodeTags(String field) throws QuorumException {
+        List<Tag> tags = new ArrayList<>();
+        if (field.isEmpty()) {
+            return tags;
+        }
+        for (String value : field.split(",", -1)) {
+            tags.add(new Tag(value));
+        }
+        return tags;
     }
 
     private String removeByteOrderMark(String content) {
