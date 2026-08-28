@@ -1,7 +1,7 @@
 package quorum.command;
 
-import quorum.Roster;
 import quorum.Ui;
+import quorum.model.Roster;
 
 /** Displays every participant in the roster. */
 public class ListCommand implements Command {

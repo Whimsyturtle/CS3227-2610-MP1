@@ -1,7 +1,7 @@
 package quorum.storage;
 
 import quorum.QuorumException;
-import quorum.Roster;
+import quorum.model.Roster;
 
 /** Loads and saves a roster without exposing its persistence mechanism. */
 public interface RosterStorage {

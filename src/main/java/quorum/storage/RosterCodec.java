@@ -1,7 +1,7 @@
 package quorum.storage;
 
 import quorum.QuorumException;
-import quorum.Roster;
+import quorum.model.Roster;
 
 /** Encodes and decodes a roster. */
 public interface RosterCodec {

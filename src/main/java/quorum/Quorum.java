@@ -4,6 +4,7 @@ import java.nio.file.Path;
 
 import quorum.command.Command;
 import quorum.command.CommandOutcome;
+import quorum.model.Roster;
 import quorum.storage.FileRosterStorage;
 import quorum.storage.RosterStorage;
 import quorum.storage.TsvRosterCodec;

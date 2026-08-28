@@ -1,6 +1,8 @@
-package quorum;
+package quorum.model;
 
 import java.time.ZoneId;
+
+import quorum.QuorumException;
 
 /** Represents a named participant and their time zone. */
 public class Participant {

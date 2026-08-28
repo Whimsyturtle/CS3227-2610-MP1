@@ -1,4 +1,4 @@
-package quorum;
+package quorum.command;
 
 import java.time.ZoneId;
 

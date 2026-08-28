@@ -3,9 +3,9 @@ package quorum.storage;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 
-import quorum.Participant;
 import quorum.QuorumException;
-import quorum.Roster;
+import quorum.model.Participant;
+import quorum.model.Roster;
 
 /** Encodes and decodes rosters as tab-separated values. */
 public class TsvRosterCodec implements RosterCodec {

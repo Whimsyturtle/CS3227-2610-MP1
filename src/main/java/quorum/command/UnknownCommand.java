@@ -1,7 +1,7 @@
 package quorum.command;
 
-import quorum.Roster;
 import quorum.Ui;
+import quorum.model.Roster;
 
 /** Handles input whose command keyword is not supported. */
 public class UnknownCommand implements Command {

@@ -1,10 +1,9 @@
 package quorum.command;
 
-import quorum.EditRequest;
-import quorum.Participant;
 import quorum.QuorumException;
-import quorum.Roster;
 import quorum.Ui;
+import quorum.model.Participant;
+import quorum.model.Roster;
 
 /** Edits the time zone of a participant selected by index. */
 public class EditCommand implements Command {

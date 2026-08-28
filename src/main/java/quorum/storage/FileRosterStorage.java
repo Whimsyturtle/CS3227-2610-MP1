@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import quorum.QuorumException;
-import quorum.Roster;
+import quorum.model.Roster;
 
 /** Stores an encoded roster in a local file. */
 public class FileRosterStorage implements RosterStorage {

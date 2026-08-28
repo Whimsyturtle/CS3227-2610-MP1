@@ -1,10 +1,12 @@
-package quorum;
+package quorum.model;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import quorum.QuorumException;
 
 /** Stores the participants tracked by the application. */
 public class Roster {

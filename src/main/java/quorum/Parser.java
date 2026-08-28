@@ -9,8 +9,10 @@ import quorum.command.ByeCommand;
 import quorum.command.Command;
 import quorum.command.DeleteCommand;
 import quorum.command.EditCommand;
+import quorum.command.EditRequest;
 import quorum.command.ListCommand;
 import quorum.command.UnknownCommand;
+import quorum.model.Participant;
 
 /**
  * Turns raw user input into structured objects. Knows the command syntax and

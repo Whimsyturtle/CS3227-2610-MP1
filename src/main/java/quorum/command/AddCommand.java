@@ -1,8 +1,8 @@
 package quorum.command;
 
-import quorum.Participant;
-import quorum.Roster;
 import quorum.Ui;
+import quorum.model.Participant;
+import quorum.model.Roster;
 
 /** Adds a participant to the roster. */
 public class AddCommand implements Command {

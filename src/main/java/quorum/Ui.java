@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import quorum.model.Participant;
+
 /**
  * Owns every read from and write to the console. No other class touches
  * System.in or System.out.
