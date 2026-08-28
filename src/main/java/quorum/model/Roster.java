@@ -60,6 +60,15 @@ public class Roster {
         return participants.stream().anyMatch(participant -> participant.hasTag(tag));
     }
 
+    /** Returns the distinct tags currently in use, ordered alphabetically. */
+    public List<Tag> getTags() {
+        return participants.stream()
+                .flatMap(participant -> participant.getTags().stream())
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
     /** Returns the number of participants in the roster. */
     public int size() {
         return participants.size();

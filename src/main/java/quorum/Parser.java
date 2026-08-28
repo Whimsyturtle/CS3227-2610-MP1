@@ -13,6 +13,7 @@ import quorum.command.EditRequest;
 import quorum.command.ListCommand;
 import quorum.command.TagCommand;
 import quorum.command.TagRequest;
+import quorum.command.TagsCommand;
 import quorum.command.UnknownCommand;
 import quorum.command.UntagCommand;
 import quorum.command.ZonesCommand;
@@ -38,6 +39,7 @@ public class Parser {
         case "edit" -> new EditCommand(parseEdit(arguments));
         case "tag" -> new TagCommand(parseTagRequest(arguments));
         case "untag" -> new UntagCommand(parseTagRequest(arguments));
+        case "tags" -> new TagsCommand();
         case "list" -> new ListCommand();
         case "zones" -> new ZonesCommand(parseZoneSearch(arguments));
         case "bye" -> new ByeCommand();

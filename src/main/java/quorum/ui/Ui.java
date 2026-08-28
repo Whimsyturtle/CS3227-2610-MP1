@@ -81,6 +81,21 @@ public class Ui {
         show("Removed tag " + tag + " from " + participant.getName() + ".");
     }
 
+    /** Displays the tags currently in use. */
+    public void showTags(List<Tag> tags) {
+        if (tags.isEmpty()) {
+            show("No tags in use yet.");
+            return;
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("Tags in use:");
+        for (Tag tag : tags) {
+            lines.add("  " + tag);
+        }
+        show(lines.toArray(new String[0]));
+    }
+
     /** Displays the participants currently in the roster. */
     public void showRoster(List<Participant> participants) {
         if (participants.isEmpty()) {
