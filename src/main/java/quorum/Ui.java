@@ -1,5 +1,7 @@
 package quorum;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +13,19 @@ import java.util.Scanner;
 public class Ui {
     private static final String LINE = "-".repeat(50);
 
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
+    private final PrintStream output;
+
+    /** Creates a UI connected to the process's standard input and output. */
+    public Ui() {
+        this(System.in, System.out);
+    }
+
+    /** Allows application tests to supply isolated input and output streams. */
+    Ui(InputStream input, PrintStream output) {
+        scanner = new Scanner(input);
+        this.output = output;
+    }
 
     /** Returns whether another command is available to read. */
     public boolean hasNextCommand() {
@@ -69,10 +83,10 @@ public class Ui {
     }
 
     private void show(String... lines) {
-        System.out.println(LINE);
+        output.println(LINE);
         for (String line : lines) {
-            System.out.println(" " + line);
+            output.println(" " + line);
         }
-        System.out.println(LINE);
+        output.println(LINE);
     }
 }

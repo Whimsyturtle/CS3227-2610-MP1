@@ -4,6 +4,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /** Stores the participants tracked by the application. */
 public class Roster {
@@ -11,7 +12,7 @@ public class Roster {
 
     /** Adds the given participant to the roster. */
     public void add(Participant participant) {
-        participants.add(participant);
+        participants.add(Objects.requireNonNull(participant, "Participant cannot be null."));
     }
 
     /**

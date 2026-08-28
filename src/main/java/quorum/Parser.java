@@ -45,13 +45,7 @@ public class Parser {
         if (parts.length < 2) {
             throw new QuorumException("I need a timezone. Try: add Alice /tz Asia/Singapore");
         }
-
-        String name = parts[0].trim();
-        if (name.isEmpty()) {
-            throw new QuorumException("Missing name.");
-        }
-
-        return new Participant(name, parseZone(parts[1]));
+        return new Participant(parts[0].trim(), parseZone(parts[1]));
     }
 
     /**
