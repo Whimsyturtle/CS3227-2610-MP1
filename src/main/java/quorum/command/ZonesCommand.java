@@ -7,7 +7,7 @@ import java.util.Locale;
 import quorum.model.Roster;
 import quorum.ui.Ui;
 
-/** Searches the time zones available to the application. */
+/** Searches the timezones available to the application. */
 public class ZonesCommand implements Command {
     private final String searchTerm;
 

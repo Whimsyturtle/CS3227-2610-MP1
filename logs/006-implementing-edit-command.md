@@ -4,11 +4,11 @@
 
 ## Request 1
 
-Implement an `edit` command that updates a participant's time zone using their list index.
+Implement an `edit` command that updates a participant's timezone using their list index.
 
 ## Request 2
 
-Refactor time-zone parsing into a reusable method similar to index parsing.
+Refactor timezone parsing into a reusable method similar to index parsing.
 
 ## Request 3
 
@@ -38,7 +38,7 @@ Added `Participant.withZone`, updated `Roster` to use it, and tested that editin
 
 # What You Got Wrong (if any)
 
-The initial implementation duplicated time-zone validation and made `Roster` construct replacement participants directly. Both issues were corrected after feedback.
+The initial implementation duplicated timezone validation and made `Roster` construct replacement participants directly. Both issues were corrected after feedback.
 
 # Any Other Interesting Information (if any)
 

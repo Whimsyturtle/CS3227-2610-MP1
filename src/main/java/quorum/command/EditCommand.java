@@ -5,7 +5,7 @@ import quorum.model.Participant;
 import quorum.model.Roster;
 import quorum.ui.Ui;
 
-/** Edits the time zone of a participant selected by index. */
+/** Edits the timezone of a participant selected by index. */
 public class EditCommand implements Command {
     private final EditRequest request;
 

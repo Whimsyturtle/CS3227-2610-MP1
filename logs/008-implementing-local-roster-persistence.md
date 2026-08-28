@@ -118,7 +118,7 @@ Agreed that codec-side participant validation was misplaced. Explained that asse
 
 ## Response 12
 
-Moved participant invariants into `Participant`, including nonblank names, valid TSV characters, and a non-null time zone.
+Moved participant invariants into `Participant`, including nonblank names, valid TSV characters, and a non-null timezone.
 
 ## Response 13
 

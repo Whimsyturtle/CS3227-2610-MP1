@@ -4,12 +4,12 @@ import java.time.ZoneId;
 
 import quorum.QuorumException;
 
-/** Represents a named participant and their time zone. */
+/** Represents a named participant and their timezone. */
 public class Participant {
     private final String name;
     private final ZoneId zone;
 
-    /** Creates a participant with the given name and time zone. */
+    /** Creates a participant with the given name and timezone. */
     public Participant(String name, ZoneId zone) throws QuorumException {
         validateName(name);
         this.name = name;
@@ -27,7 +27,7 @@ public class Participant {
         return zone;
     }
 
-    /** Returns a copy of this participant with the given time zone. */
+    /** Returns a copy of this participant with the given timezone. */
     public Participant withZone(ZoneId newZone) throws QuorumException {
         return new Participant(name, newZone);
     }

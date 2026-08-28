@@ -79,7 +79,7 @@ public class Ui {
         show(lines.toArray(new String[0]));
     }
 
-    /** Displays the time zones matching the given search term. */
+    /** Displays the timezones matching the given search term. */
     public void showZones(String searchTerm, List<String> zones) {
         if (zones.isEmpty()) {
             show("No timezones found for \"" + searchTerm + "\".",

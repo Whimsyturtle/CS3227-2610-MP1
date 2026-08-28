@@ -42,7 +42,7 @@ public class Parser {
     /**
      * Builds a participant from the arguments of an add command.
      *
-     * @throws QuorumException if the name or time zone is missing or invalid
+     * @throws QuorumException if the name or timezone is missing or invalid
      */
     public Participant parseParticipant(String arguments) throws QuorumException {
         String[] parts = arguments.split(ZONE_DELIMITER, 2);
@@ -53,9 +53,9 @@ public class Parser {
     }
 
     /**
-     * Parses the index and new time zone from the arguments of an edit command.
+     * Parses the index and new timezone from the arguments of an edit command.
      *
-     * @throws QuorumException if the index or time zone is missing or invalid
+     * @throws QuorumException if the index or timezone is missing or invalid
      */
     public EditRequest parseEdit(String arguments) throws QuorumException {
         String[] parts = arguments.split(ZONE_DELIMITER, 2);
@@ -102,9 +102,9 @@ public class Parser {
     }
 
     /**
-     * Parses a time zone from the given arguments.
+     * Parses a timezone from the given arguments.
      *
-     * @throws QuorumException if the time zone is missing or invalid
+     * @throws QuorumException if the timezone is missing or invalid
      */
     public ZoneId parseZone(String arguments) throws QuorumException {
         String zoneText = arguments.trim();
