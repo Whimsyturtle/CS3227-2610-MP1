@@ -24,3 +24,5 @@ Rules:
 - Keep the summary short and concise, focusing on high-level details.
 - Title should be 10 words max (e.g. `Implementing new list command`).
 - Markdown file's name should be the title, but in lower-kebab-case (e.g. `implementing-new-list-command.md`).
+- Each turn should have a corresponding request & response (excluding the log-generation turn)
+- Ensure that you surface when either party pushes back, concedes, etc.
