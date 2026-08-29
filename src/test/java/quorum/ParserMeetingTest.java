@@ -53,17 +53,17 @@ class ParserMeetingTest {
     }
 
     @Test
-    void parseMeeting_durationJustAboveZero_returnsRequest() throws QuorumException {
+    void parseMeeting_durationAtMinimum_returnsRequest() throws QuorumException {
         assertEquals(Duration.ofMinutes(1), parseDuration("1m"));
     }
 
     @Test
-    void parseMeeting_durationOneStepAboveMinimum_returnsRequest() throws QuorumException {
+    void parseMeeting_durationJustAboveMinimum_returnsRequest() throws QuorumException {
         assertEquals(Duration.ofMinutes(2), parseDuration("2m"));
     }
 
     @Test
-    void parseMeeting_zeroDuration_throwsSpecificDurationError() {
+    void parseMeeting_durationJustBelowMinimum_throwsSpecificDurationError() {
         assertInvalidDuration("0m");
     }
 

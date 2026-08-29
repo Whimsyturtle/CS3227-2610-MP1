@@ -29,7 +29,7 @@ class WakefulnessResultTest {
     }
 
     @Test
-    void constructor_attendeeCountOneAboveMinimum_derivesAwakeCount() {
+    void constructor_attendeeCountJustAboveMinimum_derivesAwakeCount() {
         WakefulnessResult result = new WakefulnessResult(SLOT, 2, List.of(ALICE));
 
         assertEquals(1, result.awakeCount());
