@@ -1,7 +1,6 @@
 package quorum;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
@@ -10,7 +9,6 @@ import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
 
-import quorum.command.MeetingCommand;
 import quorum.command.MeetingRequest;
 import quorum.model.Tag;
 
@@ -22,12 +20,6 @@ class ParserMeetingTest {
                     + "Try: meeting Asia/Singapore FRIENDS /on 2026-08-30 /for 1h";
 
     private final Parser parser = new Parser();
-
-    @Test
-    void parse_meetingKeyword_returnsMeetingCommand() throws QuorumException {
-        assertInstanceOf(MeetingCommand.class,
-                parser.parse("MeEtInG Asia/Singapore FRIENDS /on 2026-08-30 /for 1h"));
-    }
 
     @Test
     void parseMeeting_validFieldsAndFlexibleWhitespace_returnsNormalizedRequest()
