@@ -33,7 +33,7 @@ import quorum.model.Tag;
  */
 public class Parser {
     private static final Pattern ZONE_DELIMITER_PATTERN =
-            Pattern.compile("/tz", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("(?<!\\S)/tz(?=\\s)", Pattern.CASE_INSENSITIVE);
     private static final Pattern MEETING_PATTERN = Pattern.compile(
             "^(?<zone>\\S+)\\s+(?<tag>\\S+)\\s+/on\\s+(?<date>\\S+)"
                     + "\\s+/for\\s+(?<duration>\\S+)$",
