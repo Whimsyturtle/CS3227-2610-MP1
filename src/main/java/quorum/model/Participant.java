@@ -5,11 +5,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import quorum.QuorumException;
 
 /** Represents a named participant and their timezone. */
 public class Participant {
+    private static final Pattern TAB_OR_LINE_BREAK_PATTERN = Pattern.compile("\\t|\\R");
+
     private final String name;
     private final ZoneId zone;
     private final Set<Tag> tags;
@@ -98,7 +101,7 @@ public class Participant {
         if (name == null || name.isBlank()) {
             throw new QuorumException("Name cannot be null or blank.");
         }
-        if (name.indexOf('\t') >= 0 || name.indexOf('\r') >= 0 || name.indexOf('\n') >= 0) {
+        if (TAB_OR_LINE_BREAK_PATTERN.matcher(name).find()) {
             throw new QuorumException("Name cannot contain tabs or line breaks.");
         }
     }
