@@ -69,6 +69,13 @@ public class Roster {
                 .toList();
     }
 
+    /** Returns the participants carrying the given tag, in roster order. */
+    public List<Participant> getParticipantsWithTag(Tag tag) {
+        return participants.stream()
+                .filter(participant -> participant.hasTag(tag))
+                .toList();
+    }
+
     /** Returns the number of participants in the roster. */
     public int size() {
         return participants.size();

@@ -6,7 +6,8 @@ import quorum.ui.Ui;
 /** Handles input whose command keyword is not supported. */
 public class UnknownCommand implements Command {
     private static final String MESSAGE =
-            "I don't know that one. Try: add, delete, edit, tag, untag, tags, list, zones, bye";
+            "I don't know that one. Try: add, delete, edit, tag, untag, tags, "
+                    + "meeting, list, zones, bye";
 
     @Override
     public CommandOutcome execute(Roster roster, Ui ui) {

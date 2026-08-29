@@ -1,8 +1,13 @@
 package quorum;
 
 import java.time.DateTimeException;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import quorum.command.AddCommand;
 import quorum.command.ByeCommand;
@@ -11,6 +16,8 @@ import quorum.command.DeleteCommand;
 import quorum.command.EditCommand;
 import quorum.command.EditRequest;
 import quorum.command.ListCommand;
+import quorum.command.MeetingCommand;
+import quorum.command.MeetingRequest;
 import quorum.command.TagCommand;
 import quorum.command.TagRequest;
 import quorum.command.TagsCommand;
@@ -26,6 +33,14 @@ import quorum.model.Tag;
  */
 public class Parser {
     private static final String ZONE_DELIMITER = "/tz";
+    private static final Pattern MEETING_PATTERN = Pattern.compile(
+            "^(?<zone>\\S+)\\s+(?<tag>\\S+)\\s+/on\\s+(?<date>\\S+)"
+                    + "\\s+/for\\s+(?<duration>\\S+)$",
+            Pattern.CASE_INSENSITIVE);
+    private static final Pattern DURATION_PATTERN = Pattern.compile(
+            "^(?:(?<hours>\\d+)h)?(?:(?<minutes>\\d+)m)?$",
+            Pattern.CASE_INSENSITIVE);
+    private static final Duration MAX_MEETING_DURATION = Duration.ofHours(24);
 
     /** Parses the given input into a command with structured arguments. */
     public Command parse(String input) throws QuorumException {
@@ -40,6 +55,7 @@ public class Parser {
         case "tag" -> new TagCommand(parseTagRequest(arguments));
         case "untag" -> new UntagCommand(parseTagRequest(arguments));
         case "tags" -> new TagsCommand();
+        case "meeting" -> new MeetingCommand(parseMeeting(arguments));
         case "list" -> new ListCommand();
         case "zones" -> new ZonesCommand(parseZoneSearch(arguments));
         case "bye" -> new ByeCommand();
@@ -117,6 +133,26 @@ public class Parser {
     }
 
     /**
+     * Parses the display timezone, tag, date, and duration of a meeting search.
+     *
+     * @throws QuorumException if the arguments do not follow the meeting syntax
+     */
+    public MeetingRequest parseMeeting(String arguments) throws QuorumException {
+        Matcher matcher = MEETING_PATTERN.matcher(arguments.trim());
+        if (!matcher.matches()) {
+            throw new QuorumException(
+                    "Invalid meeting command. "
+                            + "Try: meeting Asia/Singapore FRIENDS /on 2026-08-30 /for 1h");
+        }
+
+        ZoneId zone = parseZone(matcher.group("zone"));
+        Tag tag = new Tag(matcher.group("tag"));
+        LocalDate date = parseMeetingDate(matcher.group("date"));
+        Duration duration = parseMeetingDuration(matcher.group("duration"));
+        return new MeetingRequest(zone, tag, date, duration);
+    }
+
+    /**
      * Parses the search term from the arguments of a zones command.
      *
      * @throws QuorumException if the search term is missing
@@ -147,5 +183,42 @@ public class Parser {
                     "I don't recognise the zone \"" + zoneText
                             + "\". Try \"zones Singapore\" to find a valid timezone.");
         }
+    }
+
+    private LocalDate parseMeetingDate(String dateText) throws QuorumException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            throw new QuorumException(
+                    "Invalid date \"" + dateText + "\". Use YYYY-MM-DD, such as 2026-08-30.");
+        }
+    }
+
+    private Duration parseMeetingDuration(String durationText) throws QuorumException {
+        Matcher matcher = DURATION_PATTERN.matcher(durationText);
+        if (!matcher.matches()
+                || matcher.group("hours") == null && matcher.group("minutes") == null) {
+            throw invalidMeetingDuration(durationText);
+        }
+
+        try {
+            long hours = matcher.group("hours") == null
+                    ? 0 : Long.parseLong(matcher.group("hours"));
+            long minutes = matcher.group("minutes") == null
+                    ? 0 : Long.parseLong(matcher.group("minutes"));
+            Duration duration = Duration.ofHours(hours).plusMinutes(minutes);
+            if (duration.isZero() || duration.compareTo(MAX_MEETING_DURATION) > 0) {
+                throw invalidMeetingDuration(durationText);
+            }
+            return duration;
+        } catch (ArithmeticException e) {
+            throw invalidMeetingDuration(durationText);
+        }
+    }
+
+    private QuorumException invalidMeetingDuration(String durationText) {
+        return new QuorumException(
+                "Invalid duration \"" + durationText
+                        + "\". Use a duration up to 24h, such as 30m, 1h, or 1h30m.");
     }
 }

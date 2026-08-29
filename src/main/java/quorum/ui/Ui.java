@@ -2,12 +2,20 @@ package quorum.ui;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import quorum.model.MeetingAttendee;
 import quorum.model.Participant;
 import quorum.model.Tag;
+import quorum.model.TimeSlot;
+import quorum.model.WakefulnessResult;
 
 /**
  * Owns every read from and write to the console. No other class touches
@@ -15,6 +23,10 @@ import quorum.model.Tag;
  */
 public class Ui {
     private static final String LINE = "-".repeat(50);
+    private static final int MAX_MEETING_SLOTS = 5;
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATE_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm");
 
     private final Scanner scanner;
     private final PrintStream output;
@@ -96,6 +108,44 @@ public class Ui {
         show(lines.toArray(new String[0]));
     }
 
+    /** Displays the maximum-scoring meeting slots and their wakefulness details. */
+    public void showMeeting(Tag tag, LocalDate date, ZoneId userZone,
+                            List<WakefulnessResult> bestResults) {
+        WakefulnessResult first = bestResults.getFirst();
+        int awakeCount = first.awakeCount();
+        int attendeeCount = first.attendeeCount();
+
+        List<String> lines = new ArrayList<>();
+        lines.add("Best meeting times for tag " + tag + " on " + date + ":");
+        if (awakeCount < attendeeCount) {
+            lines.add("No candidate slot keeps everyone awake.");
+            lines.add("The best score is " + awakeCount + "/" + attendeeCount + " awake:");
+        } else {
+            lines.add("Everyone is awake for the full duration of these slots ("
+                    + attendeeCount + "/" + attendeeCount + "):");
+        }
+
+        int displayedCount = Math.min(MAX_MEETING_SLOTS, bestResults.size());
+        for (int i = 0; i < displayedCount; i++) {
+            WakefulnessResult result = bestResults.get(i);
+            lines.add("  " + (i + 1) + ". " + formatSlot(result.slot(), userZone)
+                    + " - " + result.awakeCount() + "/"
+                    + result.attendeeCount() + " awake");
+            if (!result.notAwake().isEmpty()) {
+                lines.add("     Not awake: " + result.notAwake().stream()
+                        .map(attendee -> formatAttendee(attendee, result.slot()))
+                        .collect(Collectors.joining(", ")));
+            }
+        }
+
+        int hiddenCount = bestResults.size() - displayedCount;
+        if (hiddenCount > 0) {
+            String noun = hiddenCount == 1 ? "slot" : "slots";
+            lines.add(hiddenCount + " more equally optimal " + noun + ".");
+        }
+        show(lines.toArray(new String[0]));
+    }
+
     /** Displays the participants currently in the roster. */
     public void showRoster(List<Participant> participants) {
         if (participants.isEmpty()) {
@@ -137,5 +187,23 @@ public class Ui {
             output.println(" " + line);
         }
         output.println(LINE);
+    }
+
+    private String formatSlot(TimeSlot slot, ZoneId zone) {
+        return formatInterval(slot, zone) + " " + zone.getId();
+    }
+
+    private String formatAttendee(MeetingAttendee attendee, TimeSlot slot) {
+        return attendee.name() + " (" + formatInterval(slot, attendee.zone())
+                + " " + attendee.zone().getId() + ")";
+    }
+
+    private String formatInterval(TimeSlot slot, ZoneId zone) {
+        ZonedDateTime start = slot.start().atZone(zone);
+        ZonedDateTime end = slot.end().atZone(zone);
+        if (start.toLocalDate().equals(end.toLocalDate())) {
+            return start.format(TIME_FORMAT) + "-" + end.format(TIME_FORMAT);
+        }
+        return start.format(DATE_TIME_FORMAT) + "-" + end.format(DATE_TIME_FORMAT);
     }
 }
