@@ -32,7 +32,8 @@ import quorum.model.Tag;
  * nothing about how commands are carried out or displayed.
  */
 public class Parser {
-    private static final String ZONE_DELIMITER = "/tz";
+    private static final Pattern ZONE_DELIMITER_PATTERN =
+            Pattern.compile("/tz", Pattern.CASE_INSENSITIVE);
     private static final Pattern MEETING_PATTERN = Pattern.compile(
             "^(?<zone>\\S+)\\s+(?<tag>\\S+)\\s+/on\\s+(?<date>\\S+)"
                     + "\\s+/for\\s+(?<duration>\\S+)$",
@@ -69,7 +70,7 @@ public class Parser {
      * @throws QuorumException if the name or timezone is missing or invalid
      */
     public Participant parseParticipant(String arguments) throws QuorumException {
-        String[] parts = arguments.split(ZONE_DELIMITER, 2);
+        String[] parts = ZONE_DELIMITER_PATTERN.split(arguments, 2);
         if (parts.length < 2) {
             throw new QuorumException("I need a timezone. Try: add Alice /tz Asia/Singapore");
         }
@@ -82,7 +83,7 @@ public class Parser {
      * @throws QuorumException if the index or timezone is missing or invalid
      */
     public EditRequest parseEdit(String arguments) throws QuorumException {
-        String[] parts = arguments.split(ZONE_DELIMITER, 2);
+        String[] parts = ZONE_DELIMITER_PATTERN.split(arguments, 2);
         if (parts.length < 2) {
             throw new QuorumException("I need a timezone. Try: edit 1 /tz Europe/London");
         }
