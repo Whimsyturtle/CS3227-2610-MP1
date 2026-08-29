@@ -29,7 +29,7 @@ class MeetingCommandTest {
     private static final Duration MEETING_DURATION = Duration.ofHours(1);
 
     @Test
-    void execute_mixedRoster_showsOnlyTaggedParticipantsResultsAndContinues()
+    void execute_participantsHaveDifferentTags_usesOnlyThoseWithRequestedTagAndContinues()
             throws QuorumException {
         Tag friends = new Tag("friends");
         Tag work = new Tag("work");
@@ -58,7 +58,7 @@ class MeetingCommandTest {
     }
 
     @Test
-    void execute_noParticipantWithTag_throwsSpecificErrorWithoutShowingMeeting()
+    void execute_noParticipantHasRequestedTag_throwsErrorWithoutShowingMeeting()
             throws QuorumException {
         Tag friends = new Tag("friends");
         Roster roster = new Roster();

@@ -17,6 +17,7 @@ import quorum.QuorumException;
 
 class WakefulnessPlannerTest {
     private static final ZoneId UTC = ZoneId.of("UTC");
+    private static final ZoneId NEW_YORK = ZoneId.of("America/New_York");
     private static final LocalDate DATE = LocalDate.of(2026, 8, 30);
 
     @Test
@@ -84,7 +85,7 @@ class WakefulnessPlannerTest {
     }
 
     @Test
-    void findBestResults_awakeWindowEdges_includesExactEdgesAndExcludesAdjacentStarts() {
+    void findBestResults_thirtyMinuteMeeting_returnsAllStartsThatFitAwakeWindow() {
         List<WakefulnessResult> results = WakefulnessPlanner.findBestResults(
                 UTC, List.of(), DATE, Duration.ofMinutes(30));
 
@@ -102,7 +103,7 @@ class WakefulnessPlannerTest {
     }
 
     @Test
-    void findBestResults_durationAroundAwakeWindowLength_obeysFullIntervalBoundary() {
+    void findBestResults_durationAroundAwakeWindowLength_scoresOnlyMeetingsThatFullyFit() {
         Duration windowLength = Duration.between(
                 WakefulnessPlanner.AWAKE_FROM, WakefulnessPlanner.AWAKE_UNTIL);
 
@@ -126,7 +127,7 @@ class WakefulnessPlannerTest {
     }
 
     @Test
-    void findBestResults_sharedAwakeHoursAcrossDateBoundary_returnsAllChronologicalTies()
+    void findBestResults_singaporeAndNewYork_returnsAllStartsWhenBothAreAwake()
             throws QuorumException {
         ZoneId singapore = ZoneId.of("Asia/Singapore");
         Participant newYorker = new Participant(
@@ -148,7 +149,7 @@ class WakefulnessPlannerTest {
     }
 
     @Test
-    void findBestResults_noUniversalSlot_returnsOnlyMaximumScoreWithCorrectAttendee()
+    void findBestResults_noTimeWhenAllAttendeesAreAwake_returnsHighestScoringStarts()
             throws QuorumException {
         Participant east = new Participant("East", ZoneId.of("Asia/Shanghai"));
         Participant west = new Participant("West", ZoneId.of("America/Los_Angeles"));
@@ -172,26 +173,34 @@ class WakefulnessPlannerTest {
     }
 
     @Test
-    void findBestResults_shortNormalAndLongLocalDays_useActualDayLengths() {
-        ZoneId newYork = ZoneId.of("America/New_York");
+    void findBestResults_newYorkSpringForwardDate_usesTwentyThreeHourDay() {
+        List<WakefulnessResult> results = WakefulnessPlanner.findBestResults(
+                NEW_YORK, List.of(), LocalDate.of(2026, 3, 8), Duration.ofHours(24));
 
-        List<WakefulnessResult> springForward = WakefulnessPlanner.findBestResults(
-                newYork, List.of(), LocalDate.of(2026, 3, 8), Duration.ofHours(24));
-        List<WakefulnessResult> normal = WakefulnessPlanner.findBestResults(
-                newYork, List.of(), LocalDate.of(2026, 3, 9), Duration.ofHours(24));
-        List<WakefulnessResult> fallBack = WakefulnessPlanner.findBestResults(
-                newYork, List.of(), LocalDate.of(2026, 11, 1), Duration.ofHours(24));
-
-        assertEquals(46, springForward.size());
-        assertEquals(48, normal.size());
-        assertEquals(50, fallBack.size());
-        assertEquals(LocalTime.MIDNIGHT, localStart(springForward.getFirst(), newYork));
-        assertEquals(LocalTime.of(23, 30), localStart(springForward.getLast(), newYork));
-        assertTrue(springForward.stream()
-                .map(result -> localStart(result, newYork))
+        assertEquals(46, results.size());
+        assertEquals(LocalTime.MIDNIGHT, localStart(results.getFirst(), NEW_YORK));
+        assertEquals(LocalTime.of(23, 30), localStart(results.getLast(), NEW_YORK));
+        assertTrue(results.stream()
+                .map(result -> localStart(result, NEW_YORK))
                 .noneMatch(time -> time.getHour() == 2));
-        assertEquals(4, fallBack.stream()
-                .map(result -> localStart(result, newYork))
+    }
+
+    @Test
+    void findBestResults_newYorkNormalDate_usesTwentyFourHourDay() {
+        List<WakefulnessResult> results = WakefulnessPlanner.findBestResults(
+                NEW_YORK, List.of(), LocalDate.of(2026, 3, 9), Duration.ofHours(24));
+
+        assertEquals(48, results.size());
+    }
+
+    @Test
+    void findBestResults_newYorkFallBackDate_usesTwentyFiveHourDay() {
+        List<WakefulnessResult> results = WakefulnessPlanner.findBestResults(
+                NEW_YORK, List.of(), LocalDate.of(2026, 11, 1), Duration.ofHours(24));
+
+        assertEquals(50, results.size());
+        assertEquals(4, results.stream()
+                .map(result -> localStart(result, NEW_YORK))
                 .filter(time -> time.getHour() == 1)
                 .count());
     }
