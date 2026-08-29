@@ -211,7 +211,7 @@ public class Parser {
                 throw invalidMeetingDuration(durationText);
             }
             return duration;
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException | NumberFormatException e) {
             throw invalidMeetingDuration(durationText);
         }
     }
