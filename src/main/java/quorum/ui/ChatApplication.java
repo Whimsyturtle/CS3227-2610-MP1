@@ -2,6 +2,7 @@ package quorum.ui;
 
 import java.net.URL;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import quorum.QuorumException;
 import quorum.command.CommandOutcome;
 import quorum.logic.QuorumEngine;
@@ -26,6 +28,7 @@ public class ChatApplication extends Application {
     private static final double MINIMUM_WINDOW_WIDTH = 520;
     private static final double MINIMUM_WINDOW_HEIGHT = 400;
     private static final double MAXIMUM_BUBBLE_WIDTH = 520;
+    private static final Duration EXIT_DELAY = Duration.seconds(3);
 
     private final VBox messages = new VBox(12);
     private final TextField commandInput = new TextField();
@@ -33,9 +36,11 @@ public class ChatApplication extends Application {
 
     private ChatUi ui;
     private QuorumEngine engine;
+    private Stage stage;
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
         ui = new ChatUi(this::appendBotMessage);
 
         BorderPane root = new BorderPane();
@@ -118,6 +123,7 @@ public class ChatApplication extends Application {
             if (outcome == CommandOutcome.EXIT) {
                 ui.showGoodbye();
                 disableComposer();
+                closeWindowAfterDelay();
             }
         } catch (QuorumException e) {
             ui.showError(e.getMessage());
@@ -142,5 +148,11 @@ public class ChatApplication extends Application {
     private void disableComposer() {
         commandInput.setDisable(true);
         sendButton.setDisable(true);
+    }
+
+    private void closeWindowAfterDelay() {
+        PauseTransition delay = new PauseTransition(EXIT_DELAY);
+        delay.setOnFinished(event -> stage.close());
+        delay.play();
     }
 }
