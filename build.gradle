@@ -53,7 +53,7 @@ test {
 }
 
 application {
-    mainClass = 'quorum.Quorum'
+    mainClass = 'quorum.Launcher'
     applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
 }
 

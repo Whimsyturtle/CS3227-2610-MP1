@@ -1,0 +1,74 @@
+.app {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.header {
+    -fx-background-color: #17233c;
+    -fx-padding: 18 22 16 22;
+}
+
+.title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #b9c6dc;
+}
+
+.conversation,
+.conversation > .viewport,
+.messages {
+    -fx-background-color: #f4f7fb;
+}
+
+.bot-bubble,
+.user-bubble {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+    -fx-padding: 11 14 11 14;
+    -fx-background-radius: 14px;
+}
+
+.bot-bubble {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #202a3b;
+    -fx-border-color: #dde4ef;
+    -fx-border-radius: 14px;
+}
+
+.user-bubble {
+    -fx-background-color: #315ee8;
+    -fx-text-fill: #ffffff;
+}
+
+.composer {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dde4ef transparent transparent transparent;
+    -fx-padding: 14 18 14 18;
+}
+
+.text-field {
+    -fx-background-color: #f4f7fb;
+    -fx-background-radius: 10px;
+    -fx-border-color: #d4ddea;
+    -fx-border-radius: 10px;
+    -fx-font-size: 14px;
+    -fx-padding: 10 12 10 12;
+}
+
+.button {
+    -fx-background-color: #315ee8;
+    -fx-background-radius: 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:hover {
+    -fx-background-color: #244bc7;
+}
