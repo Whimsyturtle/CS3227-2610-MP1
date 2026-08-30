@@ -2,6 +2,8 @@
 
 All four branches start from commit `532c3f2` and change only the same six files under `src/test`. Conditions 1/1b use the basic prompt; 2/2b use the structured test-design prompt.
 
+Some trials was discarded after a Luna agent used Git to inspect other experiment branches, allowing information to leak between conditions through repository metadata. Before re-running affected conditions, the local experiment branches and build caches were removed, and the agents' permissions were tightened to block Git commands. Every result and statistic below comes from unaffected or replacement runs.
+
 ## Results
 
 | Branch | Model | Prompt | Partition coverage | Boundary coverage | Error-path coverage | Redundancy | Tests | Execution | Found duration bug |
@@ -11,7 +13,7 @@ All four branches start from commit `532c3f2` and change only the same six files
 | `exp-unit-test-1b` | Luna | Basic | 60/73 (82.2%) | 18/30 (60.0%) | 26/34 (76.5%) | 1/26 (3.8%) | 26 | Compiles; all 26 pass | No |
 | `exp-unit-test-2b` | Luna | Structured | 70/73 (95.9%) | 24/30 (80.0%) | 32/34 (94.1%) | **1/35 (2.9%)** | 35 | Compiles; 34 pass, 1 fails on bug | Yes |
 
-The failure is a confirmed production defect: an oversized numeric duration leaks `NumberFormatException` instead of the parser's intended `QuorumException`.
+The failure is a confirmed production bug: an oversized numeric duration leaks `NumberFormatException` instead of the parser's intended `QuorumException`.
 
 ## Findings
 
