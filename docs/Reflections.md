@@ -41,3 +41,21 @@ However, the most unexpected finding came from the agentic environment rather th
 Because of this, I re-ran the trials, after deleting local build caches and local experiment branches, and also tightening Codex's permissions to block Git commands. In the future, I also plan on monitoring logs and limiting permissions, especially when running LLM experiments.
 
 _(See [016](../logs/016-designing-prompt-quality-unit-test-experiment.md), [017](../logs/017-evaluating-sol-vs-luna-unit-test-prompts.md), [018](../logs/018-evaluating-unit-test-prompt-results-across-sol-and-luna.md))_
+
+## What I Found LLMs Good At
+
+1. Exploration: It could help me quickly compare alternatives (e.g. it helped me reject exceptions for normal exit, distinguish tags from first-class groups, and preserve meaningful spaces in participant names), while I still made the final choice.
+2. Test Generation: It could automatically create test cases based on observable behavior, expose bugs (e.g. oversized duration bug, `U+2028` persistence bug), and other edge cases I might not have considered manually.
+3. First Drafts: It could efficiently create first drafts (e.g. test commit planning, JavaFX integration, and documentation files), saving time even when the output still needed to be iterated upon.
+4. Mechanically Verifiable Work: These tasks (e.g. adding small commands, moving packages, refactoring classes) usually needed little manual changes.
+5. Fixing Concrete Issues: When reviewing its own work, sometimes, it identifies issues and corrects them without my intervention, resembling Week 1 lecture's Reflexion loop. On the other hand, when I identify a concrete issue myself, it also usually effectively fixes the issue.
+
+## What I Found LLMs Bad At
+
+1. Appropriate Level of Detail: It often adds more detail than the intended reader needs (e.g. overdocumented obvious getters with redundant Javadoc comments, added repetitive or out-of-scope explanations to the DG). From this, I learnt to tell the LLM to be concise, and define the intended scope in my prompts, then apply the KISS principle during review.
+2. Project Intent: I found that providing context (via repository access) did not guarantee understanding of project intent (e.g. it missed parser conventions, preferred using non-standard terminology, and repeatedly treated one meeting algorithm as the product's permanent identity).
+3. Appropriate Architecture: It sometimes alternated between mega-classes and premature abstractions (e.g. universal UI recorder test class, overly-complex GUI).
+4. Naming and Responsibility: It sometimes chose names whose apparent scope did not match the code (e.g. `parseIndex` containing participant-specific error messages, `WakefulnessEvaluation` not clearly describing a result).
+5. Course-Specific Knowledge: It was less reliable when dealing with information specific to CS2103 (e.g. it confidently said to use Java 17 instead of Java 25). From this, I learnt to explicitly provide current course materials, and to verify its claims against primary sources.
+6. Repository-Wide Correctness: It sometimes generated code that looked correct in isolation, but was inconsistent with the rest of the project (e.g. build exposed reference to a deleted method, manual review uncovered misplaced tag responsibility). From this, I learnt that generated code still needed verification through automated checks and manual review.
+7. Summarization: I found that concise AI-generated logs could sometimes lose important context (e.g. the data persistence summary initially collapsed 17 turns into 6 turns).
