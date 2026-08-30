@@ -1,8 +1,8 @@
-package quorum;
+package quorum.ui;
 
+import quorum.QuorumException;
 import quorum.command.CommandOutcome;
 import quorum.logic.QuorumEngine;
-import quorum.ui.ConsoleUi;
 
 /** Runs Quorum's console-based command loop. */
 public class ConsoleApplication {
@@ -13,7 +13,8 @@ public class ConsoleApplication {
         ui = new ConsoleUi();
     }
 
-    void run() {
+    /** Starts the console command loop. */
+    public void run() {
         try {
             runCommandLoop(new QuorumEngine());
         } catch (QuorumException e) {

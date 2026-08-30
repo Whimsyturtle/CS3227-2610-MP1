@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javafx.application.Application;
 import quorum.ui.ChatApplication;
+import quorum.ui.ConsoleApplication;
 
 /** Selects the graphical interface by default or the console with {@code --cli}. */
 public final class Launcher {
