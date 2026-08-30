@@ -12,9 +12,21 @@ import quorum.QuorumException;
 public class Roster {
     private final List<Participant> participants = new ArrayList<>();
 
-    /** Adds the given participant to the roster. */
-    public void add(Participant participant) {
-        participants.add(Objects.requireNonNull(participant, "Participant cannot be null."));
+    /**
+     * Adds the given participant to the roster.
+     *
+     * @throws QuorumException if a participant with the same name is already present
+     */
+    public void add(Participant participant) throws QuorumException {
+        Participant participantToAdd = Objects.requireNonNull(
+                participant, "Participant cannot be null.");
+        for (Participant existing : participants) {
+            if (existing.getName().equalsIgnoreCase(participantToAdd.getName())) {
+                throw new QuorumException(
+                        existing.getName() + " is already in the roster.");
+            }
+        }
+        participants.add(participantToAdd);
     }
 
     /**

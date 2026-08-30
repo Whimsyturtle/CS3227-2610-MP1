@@ -49,7 +49,13 @@ public class TsvRosterCodec implements RosterCodec {
             if (line.isEmpty()) {
                 continue;
             }
-            roster.add(decodeParticipant(line, i + 1));
+            Participant participant = decodeParticipant(line, i + 1);
+            try {
+                roster.add(participant);
+            } catch (QuorumException e) {
+                throw new QuorumException(
+                        "Invalid participant on line " + (i + 1) + ": " + e.getMessage(), e);
+            }
         }
         return roster;
     }

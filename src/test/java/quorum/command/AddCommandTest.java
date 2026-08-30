@@ -2,6 +2,7 @@ package quorum.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.ZoneId;
 import java.util.List;
@@ -50,6 +51,23 @@ class AddCommandTest {
         assertEquals(1, ui.callCount);
         assertSame(bob, ui.participant);
         assertEquals(2, ui.total);
+    }
+
+    @Test
+    void execute_duplicateNormalizedName_throwsWithoutMutationOrSuccessMessage()
+            throws QuorumException {
+        Participant alice = new Participant("Alice Tan", SINGAPORE);
+        Roster roster = new Roster();
+        roster.add(alice);
+        AddUiSpy ui = new AddUiSpy();
+
+        QuorumException exception = assertThrows(QuorumException.class, () ->
+                new AddCommand(new Participant("ALICE  TAN", SINGAPORE))
+                        .execute(roster, ui));
+
+        assertEquals("Alice Tan is already in the roster.", exception.getMessage());
+        assertEquals(List.of(alice), roster.asList());
+        assertEquals(0, ui.callCount);
     }
 
     private static final class AddUiSpy extends SilentUi {

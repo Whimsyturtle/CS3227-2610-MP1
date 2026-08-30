@@ -29,6 +29,14 @@ class ParticipantTest {
     }
 
     @Test
+    void constructor_nameWithSurroundingAndRepeatedSpaces_storesNormalizedName()
+            throws QuorumException {
+        Participant participant = new Participant("  Alice  Tan  ", SINGAPORE);
+
+        assertEquals("Alice Tan", participant.getName());
+    }
+
+    @Test
     void constructor_validNameZoneAndTags_ordersTagsAlphabetically()
             throws QuorumException {
         Tag work = new Tag("work");

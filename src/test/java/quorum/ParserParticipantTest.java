@@ -38,12 +38,12 @@ class ParserParticipantTest {
     }
 
     @Test
-    void parseParticipant_multiWordName_preservesInternalWhitespace()
+    void parseParticipant_multiWordName_normalizesRepeatedSpaces()
             throws QuorumException {
         Participant participant = parser.parseParticipant(
                 "Alice  Tan /tz Asia/Singapore");
 
-        assertEquals("Alice  Tan", participant.getName());
+        assertEquals("Alice Tan", participant.getName());
         assertEquals(ZoneId.of("Asia/Singapore"), participant.getZone());
     }
 

@@ -1,5 +1,6 @@
 package quorum.command;
 
+import quorum.QuorumException;
 import quorum.model.Participant;
 import quorum.model.Roster;
 import quorum.ui.ResponseView;
@@ -13,7 +14,7 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public CommandOutcome execute(Roster roster, ResponseView view) {
+    public CommandOutcome execute(Roster roster, ResponseView view) throws QuorumException {
         roster.add(participant);
         view.showAdded(participant, roster.size());
         return CommandOutcome.CONTINUE;

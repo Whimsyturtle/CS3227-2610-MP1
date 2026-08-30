@@ -183,6 +183,19 @@ class TsvRosterCodecTest {
         assertEquals("Tags cannot contain duplicates.", cause.getMessage());
     }
 
+    @Test
+    void decode_duplicateNormalizedNames_wrapsSpecificExceptionWithSecondLineNumber() {
+        QuorumException exception = assertThrows(QuorumException.class, () ->
+                codec.decode(HEADER
+                        + "\nAlice Tan\tAsia/Singapore\t"
+                        + "\nALICE  TAN\tEurope/London\t"));
+
+        assertEquals("Invalid participant on line 3: Alice Tan is already in the roster.",
+                exception.getMessage());
+        QuorumException cause = assertInstanceOf(QuorumException.class, exception.getCause());
+        assertEquals("Alice Tan is already in the roster.", cause.getMessage());
+    }
+
     private void assertParticipant(
             Participant participant, String name, String zoneId, String... tags) {
         assertEquals(name, participant.getName());

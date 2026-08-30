@@ -43,6 +43,43 @@ class RosterTest {
     }
 
     @Test
+    void add_sameNameWithDifferentCase_throwsSpecificExceptionWithoutChangingRoster()
+            throws QuorumException {
+        Roster roster = rosterOf(participant("Alice Tan"));
+
+        QuorumException exception = assertThrows(QuorumException.class, () ->
+                roster.add(participant("ALICE TAN")));
+
+        assertEquals("Alice Tan is already in the roster.", exception.getMessage());
+        assertEquals(List.of("Alice Tan"), roster.asList().stream()
+                .map(Participant::getName)
+                .toList());
+    }
+
+    @Test
+    void add_sameNameWithRepeatedSpaces_throwsSpecificExceptionWithoutChangingRoster()
+            throws QuorumException {
+        Roster roster = rosterOf(participant("Alice Tan"));
+
+        QuorumException exception = assertThrows(QuorumException.class, () ->
+                roster.add(participant("Alice  Tan")));
+
+        assertEquals("Alice Tan is already in the roster.", exception.getMessage());
+        assertEquals(1, roster.size());
+    }
+
+    @Test
+    void add_nameWithoutSpace_appendsDistinctParticipant() throws QuorumException {
+        Participant aliceTan = participant("Alice Tan");
+        Participant aliceTanWithoutSpace = participant("AliceTan");
+        Roster roster = rosterOf(aliceTan);
+
+        roster.add(aliceTanWithoutSpace);
+
+        assertEquals(List.of(aliceTan, aliceTanWithoutSpace), roster.asList());
+    }
+
+    @Test
     void add_nullParticipant_throwsSpecificExceptionWithoutChangingRoster() {
         Roster roster = new Roster();
 
@@ -414,7 +451,7 @@ class RosterTest {
         return rosterOf(participant("Alice"), participant("Bob"));
     }
 
-    private Roster rosterOf(Participant... participants) {
+    private Roster rosterOf(Participant... participants) throws QuorumException {
         Roster roster = new Roster();
         for (Participant participant : participants) {
             roster.add(participant);

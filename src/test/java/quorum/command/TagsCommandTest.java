@@ -67,7 +67,7 @@ class TagsCommandTest {
         return new Participant(name, SINGAPORE, List.of(tags));
     }
 
-    private Roster rosterOf(Participant... participants) {
+    private Roster rosterOf(Participant... participants) throws QuorumException {
         Roster roster = new Roster();
         for (Participant participant : participants) {
             roster.add(participant);

@@ -60,7 +60,7 @@ class ListCommandTest {
         assertSame(bob, roster.asList().get(1));
     }
 
-    private Roster rosterOf(Participant... participants) {
+    private Roster rosterOf(Participant... participants) throws QuorumException {
         Roster roster = new Roster();
         for (Participant participant : participants) {
             roster.add(participant);

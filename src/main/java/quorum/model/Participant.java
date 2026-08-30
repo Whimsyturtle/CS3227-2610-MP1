@@ -12,6 +12,7 @@ import quorum.QuorumException;
 /** Represents a named participant and their timezone. */
 public class Participant {
     private static final Pattern TAB_OR_LINE_BREAK_PATTERN = Pattern.compile("\\t|\\R");
+    private static final Pattern REPEATED_SPACE_PATTERN = Pattern.compile(" {2,}");
 
     private final String name;
     private final ZoneId zone;
@@ -26,7 +27,7 @@ public class Participant {
     public Participant(String name, ZoneId zone, Collection<Tag> tags)
             throws QuorumException {
         validateName(name);
-        this.name = name;
+        this.name = normalizeName(name);
         if (zone == null) {
             throw new QuorumException("Timezone cannot be null.");
         }
@@ -104,6 +105,10 @@ public class Participant {
         if (TAB_OR_LINE_BREAK_PATTERN.matcher(name).find()) {
             throw new QuorumException("Name cannot contain tabs or line breaks.");
         }
+    }
+
+    private static String normalizeName(String name) {
+        return REPEATED_SPACE_PATTERN.matcher(name.strip()).replaceAll(" ");
     }
 
 }
