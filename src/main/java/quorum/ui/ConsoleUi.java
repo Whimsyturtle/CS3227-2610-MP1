@@ -5,19 +5,19 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 /** Owns every read from and write to the console. */
-public class Ui extends TextResponseView {
+public class ConsoleUi extends TextResponseView {
     private static final String LINE = "-".repeat(50);
 
     private final Scanner scanner;
     private final PrintStream output;
 
     /** Creates a UI connected to the process's standard input and output. */
-    public Ui() {
+    public ConsoleUi() {
         this(System.in, System.out);
     }
 
-    /** Allows application tests to supply isolated input and output streams. */
-    public Ui(InputStream input, PrintStream output) {
+    /** Allows tests to supply isolated input and output streams. */
+    public ConsoleUi(InputStream input, PrintStream output) {
         scanner = new Scanner(input);
         this.output = output;
     }

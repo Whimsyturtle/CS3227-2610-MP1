@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import quorum.ui.Ui;
+import quorum.ui.ConsoleUi;
 
 /** Provides command tests with a UI that performs no console I/O. */
-abstract class SilentUi extends Ui {
+abstract class SilentUi extends ConsoleUi {
     SilentUi() {
         super(InputStream.nullInputStream(),
                 new PrintStream(OutputStream.nullOutputStream()));
