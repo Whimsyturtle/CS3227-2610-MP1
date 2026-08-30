@@ -1,7 +1,7 @@
 package quorum.command;
 
 import quorum.model.Roster;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Handles input whose command keyword is not supported. */
 public class UnknownCommand implements Command {
@@ -10,8 +10,8 @@ public class UnknownCommand implements Command {
                     + "meeting, list, zones, bye";
 
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) {
-        ui.showError(MESSAGE);
+    public CommandOutcome execute(Roster roster, ResponseView view) {
+        view.showError(MESSAGE);
         return CommandOutcome.CONTINUE;
     }
 }

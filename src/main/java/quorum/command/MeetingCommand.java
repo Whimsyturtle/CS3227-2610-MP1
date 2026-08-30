@@ -7,7 +7,7 @@ import quorum.model.Participant;
 import quorum.model.Roster;
 import quorum.model.WakefulnessPlanner;
 import quorum.model.WakefulnessResult;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Finds the highest-scoring meeting slots for the user and participants with a given tag. */
 public class MeetingCommand implements Command {
@@ -19,7 +19,7 @@ public class MeetingCommand implements Command {
     }
 
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) throws QuorumException {
+    public CommandOutcome execute(Roster roster, ResponseView view) throws QuorumException {
         List<Participant> participants = roster.getParticipantsWithTag(request.tag());
         if (participants.isEmpty()) {
             throw new QuorumException("No participants have tag " + request.tag() + ".");
@@ -27,7 +27,7 @@ public class MeetingCommand implements Command {
 
         List<WakefulnessResult> bestResults = WakefulnessPlanner.findBestResults(
                 request.userZone(), participants, request.date(), request.duration());
-        ui.showMeeting(request.tag(), request.date(), request.userZone(), bestResults);
+        view.showMeeting(request.tag(), request.date(), request.userZone(), bestResults);
         return CommandOutcome.CONTINUE;
     }
 }

@@ -3,7 +3,7 @@ package quorum.command;
 import quorum.QuorumException;
 import quorum.model.Participant;
 import quorum.model.Roster;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Deletes a participant from the roster by index. */
 public class DeleteCommand implements Command {
@@ -14,9 +14,9 @@ public class DeleteCommand implements Command {
     }
 
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) throws QuorumException {
+    public CommandOutcome execute(Roster roster, ResponseView view) throws QuorumException {
         Participant participant = roster.remove(index);
-        ui.showDeleted(participant, roster.size());
+        view.showDeleted(participant, roster.size());
         return CommandOutcome.CONTINUE;
     }
 }

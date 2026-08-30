@@ -2,7 +2,7 @@ package quorum.command;
 
 import quorum.model.Participant;
 import quorum.model.Roster;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Adds a participant to the roster. */
 public class AddCommand implements Command {
@@ -13,9 +13,9 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) {
+    public CommandOutcome execute(Roster roster, ResponseView view) {
         roster.add(participant);
-        ui.showAdded(participant, roster.size());
+        view.showAdded(participant, roster.size());
         return CommandOutcome.CONTINUE;
     }
 }

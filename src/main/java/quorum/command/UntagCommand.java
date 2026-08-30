@@ -4,7 +4,7 @@ import quorum.QuorumException;
 import quorum.model.Participant;
 import quorum.model.Roster;
 import quorum.model.Tag;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Removes a tag from a participant selected by index. */
 public class UntagCommand implements Command {
@@ -15,10 +15,10 @@ public class UntagCommand implements Command {
     }
 
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) throws QuorumException {
+    public CommandOutcome execute(Roster roster, ResponseView view) throws QuorumException {
         Tag tag = request.tag();
         Participant participant = roster.untag(request.index(), tag);
-        ui.showUntagged(participant, tag);
+        view.showUntagged(participant, tag);
         return CommandOutcome.CONTINUE;
     }
 }

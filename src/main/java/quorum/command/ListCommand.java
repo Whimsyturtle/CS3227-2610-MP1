@@ -1,13 +1,13 @@
 package quorum.command;
 
 import quorum.model.Roster;
-import quorum.ui.Ui;
+import quorum.ui.ResponseView;
 
 /** Displays every participant in the roster. */
 public class ListCommand implements Command {
     @Override
-    public CommandOutcome execute(Roster roster, Ui ui) {
-        ui.showRoster(roster.asList());
+    public CommandOutcome execute(Roster roster, ResponseView view) {
+        view.showRoster(roster.asList());
         return CommandOutcome.CONTINUE;
     }
 }
