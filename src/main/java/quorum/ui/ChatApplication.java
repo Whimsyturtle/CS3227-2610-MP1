@@ -15,9 +15,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import quorum.QuorumEngine;
 import quorum.QuorumException;
 import quorum.command.CommandOutcome;
+import quorum.logic.QuorumEngine;
 
 /** Provides Quorum's JavaFX chat interface. */
 public class ChatApplication extends Application {

@@ -1,9 +1,11 @@
-package quorum;
+package quorum.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+
+import quorum.QuorumException;
 
 class ParserIndexTest {
     private final Parser parser = new Parser();

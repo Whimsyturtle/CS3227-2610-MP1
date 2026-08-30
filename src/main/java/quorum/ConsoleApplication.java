@@ -1,6 +1,7 @@
 package quorum;
 
 import quorum.command.CommandOutcome;
+import quorum.logic.QuorumEngine;
 import quorum.ui.ConsoleUi;
 
 /** Runs Quorum's console-based command loop. */

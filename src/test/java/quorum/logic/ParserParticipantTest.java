@@ -1,4 +1,4 @@
-package quorum;
+package quorum.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,6 +7,7 @@ import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
 
+import quorum.QuorumException;
 import quorum.model.Participant;
 
 class ParserParticipantTest {

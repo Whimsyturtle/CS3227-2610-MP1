@@ -1,8 +1,9 @@
-package quorum;
+package quorum.logic;
 
 import java.nio.file.Path;
 import java.util.Objects;
 
+import quorum.QuorumException;
 import quorum.command.Command;
 import quorum.command.CommandOutcome;
 import quorum.model.Roster;

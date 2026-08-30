@@ -1,4 +1,4 @@
-package quorum;
+package quorum.logic;
 
 import java.time.DateTimeException;
 import java.time.Duration;
@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import quorum.QuorumException;
 import quorum.command.AddCommand;
 import quorum.command.ByeCommand;
 import quorum.command.Command;

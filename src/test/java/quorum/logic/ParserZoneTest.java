@@ -1,4 +1,4 @@
-package quorum;
+package quorum.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
+
+import quorum.QuorumException;
 
 class ParserZoneTest {
     private static final String INVALID_ZONE_ERROR =

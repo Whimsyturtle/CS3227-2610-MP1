@@ -1,4 +1,4 @@
-package quorum;
+package quorum.logic;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
+import quorum.QuorumException;
 import quorum.command.AddCommand;
 import quorum.command.ByeCommand;
 import quorum.command.DeleteCommand;
