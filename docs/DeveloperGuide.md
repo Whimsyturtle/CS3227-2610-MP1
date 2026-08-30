@@ -103,46 +103,54 @@ During a meeting search, the person running Quorum is included as `You`, using t
 The following sequence shows a successful `meeting` command from the graphical interface. All commands use the same parse-execute-save path. During execution, commands send responses through `ResponseView`, except `ByeCommand`, which returns `EXIT` for the frontend to handle.
 
 ```mermaid
+%%{init: { "sequence": { "mirrorActors": false } } }%%
 sequenceDiagram
     actor User
-    participant ChatApplication
-    participant QuorumEngine
-    participant Parser
-    participant MeetingCommand
-    participant Roster
-    participant WakefulnessPlanner
-    participant View as ChatUi / TextResponseView
-    participant Storage as RosterStorage
+    participant chatApplication as chatApplication:ChatApplication
+    participant engine as engine:QuorumEngine
+    participant parser as parser:Parser
 
-    User->>ChatApplication: Submit meeting command
-    ChatApplication->>QuorumEngine: execute(input, ChatUi)
-    QuorumEngine->>Parser: parse(input)
-    Parser-->>QuorumEngine: MeetingCommand
-    QuorumEngine->>MeetingCommand: execute(roster, ChatUi)
-    MeetingCommand->>Roster: getParticipantsWithTag(tag)
-    Roster-->>MeetingCommand: Matching participants
-    MeetingCommand->>WakefulnessPlanner: findBestResults(...)
-    WakefulnessPlanner-->>MeetingCommand: Best results
-    MeetingCommand->>View: showMeeting(...)
-    View-->>ChatApplication: Append formatted message
-    MeetingCommand-->>QuorumEngine: CONTINUE
-    QuorumEngine->>Storage: save(roster)
-    Storage-->>QuorumEngine: Saved
-    QuorumEngine-->>ChatApplication: CONTINUE
+    User->>+chatApplication: submitCommand()
+    chatApplication->>+engine: execute(input, ui)
+    engine->>+parser: parse(input)
+    create participant command as command:MeetingCommand
+    parser->>+command: new MeetingCommand(request)
+    deactivate command
+    parser-->>-engine: command
+
+    participant roster as roster:Roster
+    participant WakefulnessPlanner as «class»<br/>WakefulnessPlanner
+    participant ui as ui:ChatUi
+    participant storage as storage:RosterStorage
+
+    engine->>+command: execute(roster, ui)
+    command->>+roster: getParticipantsWithTag(tag)
+    roster-->>-command: matching participants
+    command->>+WakefulnessPlanner: findBestResults(...)
+    WakefulnessPlanner-->>-command: best results
+    command->>+ui: showMeeting(...)
+    ui->>+chatApplication: appendBotMessage(formatted message)
+    deactivate chatApplication
+    deactivate ui
+    command-->>-engine: CONTINUE
+    engine->>+storage: save(roster)
+    deactivate storage
+    engine-->>-chatApplication: CONTINUE
+    deactivate chatApplication
 ```
 
-Parsing, command execution, and storage can throw `QuorumException`. The active frontend displays its message. After a command error, the graphical and console interfaces remain available; a startup storage error ends the console application or disables graphical input.
+Parsing, command execution, and storage can throw `QuorumException`. The active frontend displays its message and remains available for another command.
 
 ### Meeting-Time Ranking
 
 `WakefulnessPlanner` ranks candidate slots as follows:
 
-1. Add the user and every participant with the requested tag to the attendee list.
-2. Generate starts at 30-minute intervals across the requested date in the user's timezone.
+1. Add `You` and every participant with the requested tag to the attendee list.
+2. Generate starts at 30-minute intervals across the requested date in the timezone supplied in the command.
 3. Count an attendee as awake only when the full meeting is within 08:00 to 22:00 in that attendee's timezone.
 4. Keep every slot with the greatest awake count, in chronological order.
 
-Calculations use `Instant` for a shared point on the timeline and `ZoneId` when applying each attendee's local time rules. `TextResponseView` displays at most five maximum-scoring slots and reports how many are not shown.
+Each candidate slot uses `Instant` so that it represents the same moment worldwide. Quorum then uses each attendee's `ZoneId` to determine their local time before checking whether they are awake. `TextResponseView` displays at most five maximum-scoring slots and reports how many are not shown.
 
 ### Roster Persistence
 
@@ -164,33 +172,33 @@ JUnit tests are organised to mirror the corresponding production packages.
 
 | Area | Main behaviours tested |
 | --- | --- |
-| Model | Validation, immutable updates, roster operations, meeting ranking, and daylight-saving transitions. |
-| Commands | Roster changes, responses, errors, and `CommandOutcome` values. |
-| Parser | Command routing, argument validation, and boundary values such as indices and durations. |
+| Model | Model validation, immutable participant updates, direct roster operations, and meeting-time ranking. |
+| Commands | Command effects, `ResponseView` calls, errors, and `CommandOutcome` values. |
+| Parser | Command routing, argument parsing, and validation. |
 | Storage | TSV round trips, malformed data, missing files, and file-system errors using temporary directories. |
 
 Command tests use `SilentUi` to suppress console output and small focused spies to record the relevant `ResponseView` call. This keeps the tests independent of displayed text and unrelated UI methods.
 
-Run `./gradlew check` (or `.\gradlew.bat check` on Windows) before committing. It runs the tests and Checkstyle checks. GitHub Actions runs the same task on Windows, macOS, and Linux for every push and pull request.
+Run `./gradlew check` before committing. It runs the tests and Checkstyle checks. GitHub Actions runs the same task on Windows, macOS, and Linux whenever commits are pushed and when pull requests are opened or updated.
 
-The graphical interface has no automated UI tests. Command behaviour remains covered through the shared parser, commands, model, and `ResponseView` boundary.
+Currently, the graphical interface has no automated UI tests. Command behaviour remains covered through the shared parser, commands, model, and `ResponseView` boundary.
 
 ## Software Engineering Process
 
 ### Iterative Development
 
-Quorum was developed in small functional increments. New responsibilities were separated when the existing design became difficult to extend, rather than being introduced before they were needed.
+Quorum was developed in small increments. Abstractions were added in response to concrete design problems, avoiding premature abstraction.
 
 | Milestone | Main changes |
 | --- | --- |
 | Foundation | Added Gradle, the console command loop, roster, `add`, and `list`. |
 | Automated checks | Added Checkstyle and continuous integration. |
-| Roster management | Added `delete`, `edit`, command classes, persistence, and initial package refactoring. |
+| Roster management | Added `delete`, `edit`, and the command class hierarchy. |
+| Persistence | Added local TSV roster storage, startup loading, saving after each command, and storage/codec boundaries. |
 | Meeting search | Designed and added timezone search, tags, and wakefulness-based meeting ranking. |
 | Broader testing | Added focused model, command, parser, and storage tests; fixed defects exposed by testing. |
-| Graphical interface and documentation | Extracted shared engine and response abstractions, added the graphical interface, and documented the product. |
-
-This produced a recurring cycle of scoping a change, implementing it, checking it, and then fixing or refactoring it before the next increment. The history therefore reflects iterative development, but not strict test-driven development.
+| Graphical interface | Extracted shared engine and response abstractions and added the graphical interface. |
+| Documentation | Created and refined the User Guide and Developer Guide. |
 
 ### AI-Assisted Development
 
@@ -204,10 +212,9 @@ Feature and refactoring commits were kept separate where practical. Significant 
 
 ## Acknowledgements
 
-- The [CS3227 Project Duke guidance](https://nus-cs2103-ay2627-s1.github.io/website/projectDuke/cs3227.html), NUS CS2103/T iP materials, and [SE-EDU guides](https://se-education.org/guides/) informed the incremental project structure. Gradle, JavaFX, and GitHub Actions configuration was copied or adapted from the CS2103/T iP template.
-- The Checkstyle configuration was copied from [SE-EDU AddressBook-Level3](https://github.com/se-edu/addressbook-level3/tree/master/config/checkstyle) and follows the [SE-EDU Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html).
-- OpenAI LLMs assisted throughout development. [OpenAI Codex](https://openai.com/codex/), including GPT-5.6 Sol and GPT-5.6 Luna, was used for the unit-test prompt experiment and later development. All accepted output was reviewed by the developer; details are recorded in [`logs`](../logs/).
-- Quorum uses [OpenJFX](https://openjfx.io/), [JUnit 5](https://junit.org/junit5/), [Checkstyle](https://checkstyle.org/), and the [Shadow Gradle plugin](https://gradleup.com/shadow/).
+- The CS2103/T iP materials, and [SE-EDU guides](https://se-education.org/guides/) informed the incremental project structure. Gradle, JavaFX, and GitHub Actions configuration was copied or adapted from the CS2103/T iP template.
+- The Checkstyle configuration was copied from [SE-EDU AddressBook-Level3](https://github.com/se-edu/addressbook-level3/tree/master/config/checkstyle) and largely follows the [SE-EDU Java coding standard](https://se-education.org/guides/conventions/java/intermediate.html).
+- OpenAI LLMs assisted throughout development. [OpenAI Codex](https://openai.com/codex/), including GPT-5.6 Sol and GPT-5.6 Luna, was used for the unit-test prompt experiment and later development. LLM output was reviewed by the developer; details are recorded in [`logs`](../logs/).
 
 ## Appendix: Proposed Enhancements
 
@@ -216,6 +223,5 @@ These are possible future changes, not current features.
 | Current limitation | Proposed enhancement |
 | --- | --- |
 | Every attendee uses the same 08:00 to 22:00 awake hours. | Store configurable awake hours for each participant. |
-| A meeting search accepts one tag. | Allow selection using multiple tags. |
 | Meeting times are ranked only by the number awake. | Add optional ranking methods such as minimising inconvenience. |
 | Roster saves overwrite the existing file directly. | Write to a temporary file and replace the roster atomically. |
