@@ -17,7 +17,6 @@ import quorum.model.WakefulnessResult;
 /** Formats Quorum responses as text for display by a concrete user interface. */
 public abstract class TextResponseView implements ResponseView {
     private static final int MAX_MEETING_SLOTS = 5;
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm");
 
@@ -165,9 +164,6 @@ public abstract class TextResponseView implements ResponseView {
     private String formatInterval(TimeSlot slot, ZoneId zone) {
         ZonedDateTime start = slot.start().atZone(zone);
         ZonedDateTime end = slot.end().atZone(zone);
-        if (start.toLocalDate().equals(end.toLocalDate())) {
-            return start.format(TIME_FORMAT) + "-" + end.format(TIME_FORMAT);
-        }
         return start.format(DATE_TIME_FORMAT) + "-" + end.format(DATE_TIME_FORMAT);
     }
 }
