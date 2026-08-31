@@ -14,11 +14,20 @@ Using this workflow, I traded some control for making (repository-wide) changes 
 
 ### 1. Designing the Initial Plan
 
-I initially used one broad prompt asking for a CS2103-style, step-by-step project plan (which combined planning the project scope, architecture, and Java files). However, the LLM over-delivered by providing a semester-long project plan. When I requested for something simpler, it then put everything into 1 class, leading me to have to clarify that while I wanted less features, I still wanted **good software engineering principles** like separation of concerns.
+I initially used one broad prompt that left the feature scope and architecture open while asking for a CS2103-style, file-by-file implementation plan. However, the LLM over-delivered by providing a semester-long project plan. When I requested for something simpler, it then put everything into 1 class, leading me to have to clarify that while I wanted less features, I still wanted **good software engineering principles** like separation of concerns.
 
 Afterwards, I asked it to propose a commit sequence, which initially seemed correct. However, I found that in its proposed sequence, Gradle referenced a main class that did not exist yet, even though the LLM claimed that every commit would compile and run. As such, next time, instead of using a single prompt, I would separate it out into **exploration**, **planning**, and **production** prompts.
 
 _(See [001](../logs/001-building-quorum-javafx-timezone-app-cs2103-style.md))_
+
+_Initial Prompt_
+```
+I want to build a javafx app called "Quorum" which helps users find the hours when everyone's awake across timezones for scheduling meetings.
+
+I want to build the app with reference to https://github.com/NUS-CS2103-AY2627-S1/ip (note: it's not graded based on CS2103 standards, but I want to adopt that template style). Can u help me give me a step-by-step guide of what i should do? Like what files to commit, what they should contain, etc.
+
+Ignore the AGENTS.md and CLAUDE.md stuff, I want to build this project by manual prompting only.
+```
 
 ### 2. Exploring Data Persistence Designs Before Implementation
 
@@ -123,7 +132,7 @@ The test suite must compile, but it may remain failing when it exposes a suspect
 
 The previous section describes practices I applied during this project and would retain. Beyond those, I also learnt the following about structuring future AI-assisted work:
 
-1. **Separate Decision Making from Implementation**: My initial broad prompt showed that unresolved questions about scope and architecture can bleed into implementation, resulting in overly complex implementations. As such, I would use **exploration prompts** to compare alternatives, **planning prompts** to settle the design and workflow, and **production prompts** only after those decisions have been finalized.
+1. **Separate Decision Making from Implementation**: My initial broad prompt showed that unresolved questions about scope and architecture can result in plans that are either over-scoped or architecturally inappropriate. As such, I would use **exploration prompts** to compare alternatives, **planning prompts** to settle the design and workflow, and **production prompts** only after those decisions have been finalized.
 2. **Reuse Effective Prompts as Task-Specific Templates**: My [experiment](#3-comparing-basic-and-structured-test-prompts) showed that **structured test prompts** improved **test coverage**. Hence, in the future, I would develop and refine reusable templates for recurring tasks (e.g. design exploration, planning, implementation, testing, and documentation), rather than reconstructing effective instructions each time, by packaging these templates as reusable **skills**.
 3. **Translate Intent into Constraints**: Describing a task at a high-level was insufficient, as the LLM could sometimes interpret this by putting everything into one class or adding premature abstractions. I would instead state the intended scope, goals, non-goals, level of detail, and relevant repository conventions explicitly.
 4. **Maintain a Repository Glossary**: I observed that LLMs often introduced novel or non-standard terms that did not follow the repository's existing vocabulary. In the future, I would maintain a glossary of repository terms, and provide it as context for the LLM. This would give both LLM and human contributors a shared "source of truth", making comments, documentation, and identifier names more consistent.
