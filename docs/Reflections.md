@@ -44,6 +44,56 @@ Because of this, I re-ran the trials, after deleting local build caches and loca
 
 _(See [016](../logs/016-designing-prompt-quality-unit-test-experiment.md), [017](../logs/017-evaluating-sol-vs-luna-unit-test-prompts.md), [018](../logs/018-evaluating-unit-test-prompt-results-across-sol-and-luna.md))_
 
+_Basic Prompt_
+```
+Create JUnit unit tests for the meeting time feature.
+
+More specifically, test `Parser`'s meeting command parsing, `MeetingCommand`, `WakefulnessPlanner`, `TimeSlot`, `WakefulnessResult`, and `MeetingAttendee` only.
+
+You must only add or edit files under `src/test`. Do not change production code, `build.gradle`, or dependencies.
+
+Then, run the generated tests. If a test fails because you suspect an existing production defect, do not delete, disable, or weaken the test merely to make the suite pass. Keep the test and report it to me.
+
+The test suite must compile, but it may remain failing when it exposes a suspected production defect.
+```
+
+_Structured Prompt_
+```
+Create JUnit unit tests for the meeting time feature.
+
+More specifically, test `Parser`'s meeting command parsing, `MeetingCommand`, `WakefulnessPlanner`, `TimeSlot`, `WakefulnessResult`, and `MeetingAttendee` only.
+
+Derive the tests systematically from the app's observable behaviour AND comments before using the implementation to identify branches, error paths, etc.
+
+Apply these test-design techniques:
+
+1. Equivalence partitioning
+   - Identify the meaningful valid and invalid partitions for each input (plus relevant object state).
+   - Cover every meaningful partition.
+   - Avoid repeatedly sampling the same partition unless an additional case has distinct defect-finding value.
+
+2. Boundary value analysis
+   - For each meaningful boundary, test a value just below the boundary, exactly at the boundary, and just above it.
+   - Derive the actual boundaries from observable behavior, comments, and implementation.
+
+3. Positive and negative test heuristics
+   - Exercise each valid partition at least once in a positive test.
+   - Test each invalid input individually while keeping the other inputs valid, before testing combinations of invalid inputs.
+   - Assert the specific expected result or exception, rather than merely asserting that execution completes or fails.
+
+4. Combining inputs
+   - Use an at-least-once or pairwise strategy for inputs that can influence one another.
+   - Do not test every possible combination unless each combination represents meaningfully different behaviour.
+
+After applying the aformentioned techniques, double check the implementation for missed branches, conditions, exception paths, temporal behaviour, etc. and consolidate tests that add no distinct behavioural or defect-finding coverage. Use descriptive test names and focused assertions.
+
+You must only add or edit files under `src/test`. Do not change production code, `build.gradle`, or dependencies.
+
+Then, run the generated tests. If a test fails because you suspect an existing production defect, do not delete, disable, or weaken the test merely to make the suite pass. Keep the test and report it to me.
+
+The test suite must compile, but it may remain failing when it exposes a suspected production defect.
+```
+
 ## What I Found LLMs Good At
 
 1. **Exploration**: It could help me quickly compare alternatives (e.g. it helped me [reject exceptions for normal exit](../logs/007-refactoring-command-execution.md), [distinguish tags from first-class groups](../logs/012-designing-tags-and-meeting-time-ranking.md), and [preserve meaningful spaces in participant names](../logs/028-preventing-duplicate-roster-names.md)), while I still made the final choice.
